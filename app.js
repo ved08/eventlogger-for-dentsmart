@@ -1,20 +1,21 @@
 const sqlite3 = require('sqlite3').verbose();
-const dbPath = './sqlite/logs.db' // DB path here
-let db = new sqlite3.Database(dbPath, (err) => {
+// Open a SQLite database connection
+const db = new sqlite3.Database('./sqlite/logs.db');
+
+// Create the "logs" table if it doesn't exist
+db.run(`CREATE TABLE IF NOT EXISTS logs (
+    uid INTEGER,
+    type TEXT,
+    log_time DATETIME, 
+    month INTEGER
+)`, (err) => {
     if (err) {
-      return console.error(err.message);
+        console.error(err);
+    } else {
+        console.log('Rooms database ready!');
     }
-    console.log('Connected to the in-memory SQlite database.');
 });
 
-async function connectToDBAndSendQuery(query) {
-    let data;
-    await db.all(query, [], (err, rows) => {
-        if (err) throw err;
-        rows.forEach(row => {data = row})
-    })
-    return data
-}
 function getHistory(uid) {
     db.all(`select * from logs where logs.uid=${uid}`, [], (err, rows) => {
     if(err) {
@@ -28,9 +29,9 @@ function getHistory(uid) {
             console.log(rows)
         }
     }
-    db.close()
 })
 }
+
 function getCount(uid, month, type) {
     db.all(`select * from logs where logs.uid= ? and month= ? and type= ?`, [uid, month, type], (err, rows) => {
         if(err) {
@@ -39,8 +40,8 @@ function getCount(uid, month, type) {
             console.log("number of times clicked is: ", rows.length)
         }  
     })
-    db.close()
 }
+
 function newEvent(uid, type, date, month) {
     const query = `INSERT INTO logs(uid, type, log_time, month) VALUES(?, ?, ?, ?)`
     db.run(query, [uid, type, date, month], err => {
@@ -49,12 +50,17 @@ function newEvent(uid, type, date, month) {
             console.log("added the new event")
         }
     })
-    db.close()
 }
 
 // EXAMPLE newEvent:
-// newEvent(1234567894, "link", "2023-11-08", 11)
+// newEvent(1234567894, "link", "2023-05-08", 5);
 // EXAMPLE getCount:
-// getCount(1234567894, 11, "link")
+getCount(1234567894, 9, "link")
 // EXAMPLE getHistory
+getHistory(1234567894)
 // getHistory(1234567894)
+
+// Perform database queries before this line
+db.close(err => {
+    if(!err) console.log("database closed")
+})
