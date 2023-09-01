@@ -4,7 +4,7 @@ const db = new sqlite3.Database('./sqlite/logs.db');
 
 // Create the "logs" table if it doesn't exist
 db.run(`CREATE TABLE IF NOT EXISTS logs (
-    uid INTEGER,
+    uid TEXT,
     type TEXT,
     log_time DATETIME, 
     month INTEGER
@@ -53,11 +53,11 @@ function newEvent(uid, type, date, month) {
 }
 
 // EXAMPLE newEvent:
-// newEvent(1234567894, "link", "2023-05-08", 5);
+// newEvent("1234567894", "link", "2023-05-08", 5);
 // EXAMPLE getCount:
-// getCount(1234567894, 9, "link")
+// getCount("1234567894", 9, "link")
 // EXAMPLE getHistory
-// getHistory(1234567894)
+// getHistory("1234567894")
 
 // Perform database queries before this line
 db.close(err => {
