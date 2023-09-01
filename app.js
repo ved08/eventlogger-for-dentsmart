@@ -59,7 +59,7 @@ function newEvent(uid, type, date, month) {
 // EXAMPLE getHistory
 // getHistory(1234567894)
 
-// Perform database queries before this line
+// PEFORM DB QUERIES BEFORE THIS LINE
 db.close(err => {
     if(!err) console.log()
 })
