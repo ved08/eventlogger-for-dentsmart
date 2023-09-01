@@ -62,5 +62,5 @@ getHistory(1234567894)
 
 // Perform database queries before this line
 db.close(err => {
-    if(!err) console.log("database closed")
+    if(!err) console.log()
 })
