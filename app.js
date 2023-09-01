@@ -6,15 +6,6 @@ let db = new sqlite3.Database(dbPath, (err) => {
     }
     console.log('Connected to the in-memory SQlite database.');
 });
-
-async function connectToDBAndSendQuery(query) {
-    let data;
-    await db.all(query, [], (err, rows) => {
-        if (err) throw err;
-        rows.forEach(row => {data = row})
-    })
-    return data
-}
 function getHistory(uid) {
     db.all(`select * from logs where logs.uid=${uid}`, [], (err, rows) => {
     if(err) {
